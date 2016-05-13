@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8">
     <title>Jam's Blog</title>
@@ -8,10 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles/icons.css">
     <link rel="stylesheet" href="styles/base.css">
-    <link rel="stylesheet" href="styles/layput.css">
+    <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="styles/modules.css">
-  </head>
 
+    <script id="education-template" type="text/x-handlebars-template">
+      <article class="clearxfix" data-category="{{school}}" data-something="">
+        <header>
+          <h1>{{school}}</h1>
+            <h2>{{study}}</h2>
+        </header>
+        <section>{{additionalInfo}}</section>
+      </article>
+    </script>
+  </head>
   <body>
     <header class="">
       <section class="">
@@ -34,7 +42,7 @@
       </nav>
     </header>
     <main>
-      <section id="about" class="about-content">
+      <section id="educations" class="about-content"></section>
         <article class="about-me">
           <h1>About Me</h1>
           <p>
@@ -43,7 +51,6 @@
           </p>
           <a href="#" class="read-on">Read on &rarr;</a>
         </article>
-      </section>
       <section id="articles" class="tab-content">
         <article class="template-work" data-category="cat">
             <h1>Project 1</h1>
@@ -69,7 +76,9 @@
       &copy; 2016 Code Fellows | Static Blog | Happy Ipsum!
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="scripts/myProjects.js"></script>
-    <script src="scripts/article.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.4/handlebars.js"></script>
+    <script src="scripts/myInfo.js"></script>
+    <script src="scripts/portfolio.js"></script>
+    <script src="scripts/portfolioView.js"></script>
   </body>
 </html>

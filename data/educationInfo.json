@@ -1,0 +1,23 @@
+[
+  {
+    "school": "Code Fellows 201",
+    "study": "HTML, JS, CSS",
+    "years": "2016",
+    "graduateOn": "2016-05-06",
+    "additionalInfo": "Sample of additional info",
+  },
+  {
+    "school": "Code Fellows 301",
+    "study": "HTML, JS, CSS",
+    "years": "2016",
+    "graduate": "2016-06-06",
+    "additionalInfo": "Sample of additional info",
+  },
+  {
+    "school": "ISU",
+    "study": "English",
+    "years": "2008",
+    "graduate": "",
+    "additionalInfo": "Sample of additional info",
+  }
+];

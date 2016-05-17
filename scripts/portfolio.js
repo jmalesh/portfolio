@@ -1,24 +1,68 @@
-var educations = [];
-var projects = [];
-var aboutJam = {};
-
 function Education (opts) {
-  for (key in opts) this[key] = opts[key];
+  for (key in opts) {
+    this[key] = opts[key];
+  }
 };
 
-Education.prototype.toHtml = function() {
-  var $source = $('#education-template').html();
+Education.all = [];
+
+Education.prototype.toHtml = function(scriptTemplateId) {
   var template = Handlebars.compile($source);
   return template(this);
 };
 
-myEducation.forEach(function(educationObject) {
-  educations.push(new Education(educationObject));
-});
+Education.loadAll = function(dataWePassIn) {
+  dataWePassIn.sort(function(a,b) {
+    return (new Date(b.publishedOn)) - (new Date(a.publishedOn));
+  });
+  dataWePassIn.forEach(function(ele) {
+    Education.all.push(new Education(ele));
+  });
+};
 
-educations.forEach(function(newEducationObject) {
-  $('#educations').append(newEducationObject.toHtml());
-});
+// myEducation.forEach(function(educationObject) {
+//   educations.push(new Education(educationObject));
+// });
+//
+// educations.forEach(function(newEducationObject) {
+//   $('#educations').append(newEducationObject.toHtml());
+// });
+
+Education.fetchAll = function() {
+  if (localStorage.educationInfo) {
+    console.log('hola');
+    Education.loadAll(JSON.parse(localStorage.educationInfo));
+    educations.initIndexPage();
+
+    $.ajax({
+      type: 'GET',
+      url: '/data/educationInfo.json',
+      success: function(data, message, xhr) {
+        var eTag = xhr.getResponseHeader('eTag');
+        console.log(message, eTag);
+      }
+    });
+  } else {
+    $.getJSON('/data/educationInfo.json', function(data) {
+      Education.loadAll(data);
+      console.log('hi');
+      localStorage.educationInfo = JSON.stringify(data);
+      educations.initIndexPage();
+    });
+  }
+};
+
+/* Great work so far! STRETCH GOAL TIME! Refactor your fetchAll above, or
+   get some additional typing practice here. Our main goal in this part of the
+   lab will be saving the eTag located in Headers, to see if it's been updated!
+  Article.fetchAll = function() {
+    if (localStorage.hackerIpsum) {
+      // Let's make a request to get the eTag (hint: you may need to use a different
+      // jQuery method for this more explicit request).
+  } else {}
+}
+*/
+//
 
 // function Project (opts) {
 //   this.title = opts.title;

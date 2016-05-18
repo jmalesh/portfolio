@@ -1,56 +1,114 @@
-function Education (opts) {
-  for (key in opts) {
-    this[key] = opts[key];
+(function (module) {
+
+  function Project (props) {
+    for (keys in props) {
+      this[keys] = props[keys];
+    }
   }
-};
 
-Education.all = [];
+  Project.all = [];
 
-Education.prototype.toHtml = function(scriptTemplateId) {
-  var template = Handlebars.compile($source);
-  return template(this);
-};
+  Project.prototype.toHtml = function(scriptTemplateId) {
+    var template = Handlebars.compile(scriptTemplateId.html());
 
-Education.loadAll = function(dataWePassIn) {
-  dataWePassIn.sort(function(a,b) {
-    return (new Date(b.publishedOn)) - (new Date(a.publishedOn));
-  });
-  dataWePassIn.forEach(function(ele) {
-    Education.all.push(new Education(ele));
-  });
-};
+    this.daysAgo = parseInt((new Date() - new Date(this.publishedOn)) / 60 / 60 / 24 / 1000);
+    this.publishStatus = this.publishedOn ? 'published ' + this.daysAgo + ' days ago' : '(draft)';
+    this.body = marked(this.body);
 
-// myEducation.forEach(function(educationObject) {
-//   educations.push(new Education(educationObject));
-// });
+    return template(this);
+  };
+
+  Project.loadAll = function(dataWePassIn) {
+    dataWePassIn.sort(function(a,b) {
+      return (new Date(b.publishedOn)) - (new Date(a.publishedOn));
+    });
+    Project.all = dataWePassIn.map(function(ele) {
+      return new Project(ele);
+    });
+  };
+
+  Project.fetchAll = function(next) {
+    if (localStorage.projects) {
+      $.ajax ({
+        type: 'HEAD',
+        url: 'data/projects.json',
+        success: function(data, message, xhr) {
+          var eTag = xhr.getResponseHeader('eTag');
+          if (!localStorage.eTag || eTag !== localStorage.eTag) {
+            localStorage.eTag = eTag;
+            Project.getAll(next);
+          } else {
+            Project.loadAll(JSON.parse(localStorage.projects));
+            next();
+          }
+        }
+      });
+    } else {
+      Project.getAll(next);
+    }
+  };
+
+  Project.getAll = function(next) {
+    $.getJSON('data/projects.json', function(responseData) {
+      Project.loadAll(responseData);
+      localStorage.projects = JSON.stringify(responseData);
+      next();
+    });
+  };
+
+//   function Education (opts) {
+//     for (key in opts) {
+//       this[key] = opts[key];
+//     }
+//   };
 //
-// educations.forEach(function(newEducationObject) {
-//   $('#educations').append(newEducationObject.toHtml());
-// });
-
-Education.fetchAll = function() {
-  if (localStorage.educationInfo) {
-    console.log('hola');
-    Education.loadAll(JSON.parse(localStorage.educationInfo));
-    educations.initIndexPage();
-
-    $.ajax({
-      type: 'GET',
-      url: '/data/educationInfo.json',
-      success: function(data, message, xhr) {
-        var eTag = xhr.getResponseHeader('eTag');
-        console.log(message, eTag);
-      }
-    });
-  } else {
-    $.getJSON('/data/educationInfo.json', function(data) {
-      Education.loadAll(data);
-      console.log('hi');
-      localStorage.educationInfo = JSON.stringify(data);
-      educations.initIndexPage();
-    });
-  }
-};
+//   Education.all = [];
+//
+//   Education.prototype.toHtml = function(scriptTemplateId) {
+//     var template = Handlebars.compile($source);
+//     return template(this);
+//   };
+//
+//   Education.loadAll = function(dataWePassIn) {
+//     dataWePassIn.sort(function(a,b) {
+//       return (new Date(b.publishedOn)) - (new Date(a.publishedOn));
+//     });
+//     dataWePassIn.forEach(function(ele) {
+//       Education.all.push(new Education(ele));
+//     });
+//   };
+//
+// // myEducation.forEach(function(educationObject) {
+// //   educations.push(new Education(educationObject));
+// // });
+//
+// // educations.forEach(function(newEducationObject) {
+// //   $('#educations').append(newEducationObject.toHtml());
+// // });
+//
+//   Education.fetchAll = function() {
+//     if (localStorage.educationInfo) {
+//       console.log('hola');
+//       Education.loadAll(JSON.parse(localStorage.educationInfo));
+//       portfolioView.initIndexPage();
+//
+//       $.ajax({
+//         type: 'GET',
+//         url: '/data/educationInfo.json',
+//         success: function(data, message, xhr) {
+//           var eTag = xhr.getResponseHeader('eTag');
+//           console.log(message, eTag);
+//         }
+//       });
+//     } else {
+//       $.getJSON('/data/educationInfo.json', function(data) {
+//         Education.loadAll(data);
+//         console.log('hi');
+//         localStorage.educationInfo = JSON.stringify(data);
+//         portfolioView.initIndexPage();
+//       });
+//     }
+//   };
 
 /* Great work so far! STRETCH GOAL TIME! Refactor your fetchAll above, or
    get some additional typing practice here. Our main goal in this part of the
@@ -134,3 +192,5 @@ Education.fetchAll = function() {
 //   projects.populateFilters();
 //   //aboutJam.setTeasers();
 // });
+  module.Project = Project;
+})(window);

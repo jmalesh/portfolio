@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="styles/modules.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 
-    <script id="section-filter-template" type="text/x-handlebars-template">
-      <option value="{{section}}">{{section}}</option>
+    <script id="category-filter-template" type="text/x-handlebars-template">
+      <article class="clearfix" data-category="{{category}}">
+        <option value="{{category}}">{{category}}</option>
     </script>
 
     <script id="education-template" type="text/x-handlebars-template">
@@ -48,6 +49,19 @@
       </nav>
     </header>
     <main>
+      <section id="article" class="tab-content">
+        <div>
+          <h1>Projects</h1>
+            <ul id="filters">
+              <li>
+                <select id="category-filter">
+                  <option value="">--Filter Projects--</option>
+                </select>
+              </li>
+            </ul>
+          </div>
+        </section>
+
       <h1>Education</h1>
       <section id="educations" class="about-content"></section>
         <article class="about-me">
@@ -58,17 +72,6 @@
           </p>
           <a href="#" class="read-on">Read on &rarr;</a>
         </article>
-      <section id="articles" class="tab-content">
-        <article class="template-work" data-category="cat">
-            <h1>Project 1</h1>
-              <div class="byline">
-                By <address><a href="http://www.imdb.com/name/nm0000102/">Kevin Bacon</a></address>
-                published <time pubdate="" datetime="2015-11-05" title="2015-11-05">about 171 days ago</time>
-              </div>
-
-            <section class="article-body"><p></p></section>
-          <hr>
-        </article>
         <section>
           <h1>Some of my intrests:</h1>
           <ul>
@@ -77,15 +80,17 @@
             <li>Hanging with my family</li>
           </ul>
         </section>
-      </section>
     </main>
     <footer>
       &copy; 2016 Code Fellows | Static Blog | Happy Ipsum!
     </footer>
     <script src="vendors/jquery-2.1.4.js"></script>
-    <script src="vendors/handelbars.js"></script>
+    <script src="vendors/handlebars.js"></script>
     <script src="vendors/marked.js"></script>
     <script src="scripts/portfolio.js"></script>
     <script src="scripts/portfolioView.js"></script>
+    <script>
+      Project.fetchAll(profileView.initIndexPage)
+    </script>
   </body>
 </html>
